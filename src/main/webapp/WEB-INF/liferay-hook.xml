@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!DOCTYPE hook PUBLIC "-//Liferay//DTD Hook 6.2.0//EN" "http://www.liferay.com/dtd/liferay-hook_6_2_0.dtd">
+
+<hook>
+	<!--
+		Need this as portlet language bundles aren't currently picked up:
+
+		https://issues.liferay.com/browse/LPS-14664
+		https://issues.liferay.com/browse/LPS-16513
+	-->
+	<language-properties>Language.properties</language-properties>
+</hook>
