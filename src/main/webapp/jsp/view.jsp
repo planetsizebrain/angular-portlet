@@ -9,10 +9,14 @@
 	<div ng-include src="page" ng-show="model.loggedIn"></div>
 </div>
 
+<!--
+    We need to use this AlloyUI tag in combination with the 'use' attribute so that
+    we can be sure that certain Liferay Javascript stuff is loaded and available.
+-->
 <aui:script use="liferay-portlet-url,liferay-service,liferay-language,aui-base">
 
 	// Pass namespace so Angular can be correctly namespaced
-	//      https://www.liferay.com/community/forums/-/message_boards/view_message/18488646
+	// https://www.liferay.com/community/forums/-/message_boards/view_message/18488646
 	bootstrap('<portlet:namespace />main', '<portlet:namespace />');
 
 </aui:script>

@@ -1,24 +1,24 @@
-<h2 i18n="angular.title"></h2>
+<h2 i18n="bookmarks"></h2>
 <div>
 	<table class="table table-striped table-hover table-responsive">
 		<thead>
 			<tr>
-				<th>ID</th>
-				<th>Name</th>
-				<th>Actions</th>
+				<th i18n="table.id"></th>
+				<th i18n="table.name"></th>
+				<th i18n="table.actions"></th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="bookmark in model.bookmarks track by $index">
 				<td>{{bookmark.entryId}}</td>
 				<td>{{bookmark.name}}</td>
-				<td><a ng-click="detail(bookmark);" >detail</a> | <a ng-click="delete(bookmark);" >delete</a></td>
+				<td><a ng-click="detail(bookmark);" i18n="action.detail"></a> | <a ng-click="delete(bookmark);" i18n="action.delete"></a></td>
 			</tr>
 		</tbody>
 	</ul>
 	</table>
-	<a ng-click="add();" class="btn">Add bookmark</a>
+	<a ng-click="add();" class="btn" i18n="action.add"></a>
 	<br/>
 	<br/>
-	Liferay: {{model.release._buildNumber}} | Token: {{model.token}} | CompanyId: {{model.companyId}}
+	<span i18n="liferay.version"></span> {{model.release._buildNumber}} | <span i18n="auth.token"></span> {{model.token}} | <span i18n="company.id"></span>: {{model.companyId}}
 </div>

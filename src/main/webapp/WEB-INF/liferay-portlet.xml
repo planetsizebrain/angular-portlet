@@ -3,19 +3,18 @@
 
 <liferay-portlet-app>
 	<portlet>
-        <portlet-name>angular</portlet-name>
-        <icon>/img/icon.png</icon>
+		<portlet-name>angular</portlet-name>
+		<icon>/img/icon.png</icon>
 		<instanceable>true</instanceable>
 		<ajaxable>false</ajaxable>
-        <header-portlet-css>/css/main.css</header-portlet-css>
-		<header-portal-javascript>/angular-portlet/js/angular.js</header-portal-javascript>
-		<!--<header-portal-javascript>/angular-portlet/js/angular-resource.js</header-portal-javascript>-->
-		<!--<header-portal-javascript>/angular-portlet/js/angular-route.js</header-portal-javascript>-->
-		<header-portal-javascript>/angular-portlet/js/angular-ui-router.js</header-portal-javascript>
-		<!-- Can be footer -->
-		<header-portlet-javascript>/js/main.js</header-portlet-javascript>
-		<header-portlet-javascript>/js/service.js</header-portlet-javascript>
-    </portlet>
+		<!--
+		   We don't need to load Liferay's service.js anymore since 6.2
+		   http://www.liferay.com/community/forums/-/message_boards/message/39262590
+		-->
+		<footer-portal-javascript>/angular-portlet/js/angular.js</footer-portal-javascript>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<footer-portlet-javascript>/js/service.js</footer-portlet-javascript>
+	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

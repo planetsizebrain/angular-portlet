@@ -5,10 +5,6 @@ angular.module("app.factories", []).
 factory('urlFactory', function() {
 	return {
 		create: function(pid, name) {
-			if (Liferay.PortletURL === 'undefined') {
-				console.log("NOT INIT");
-			}
-
 			var resourceURL = Liferay.PortletURL.createRenderURL();
 			resourceURL.setPortletId(pid);
 			resourceURL.setPortletMode('view');
@@ -23,12 +19,6 @@ factory('bookmarkFactory', function($q) {
 	var getBookmarks = function() {
 		var deferred = $q.defer();
 
-//		if (Liferay.Service === 'undefined') {
-//			console.log("NOT INIT");
-//		}
-
-//		console.log("themedisplay", Liferay.ThemeDisplay);
-
 		Liferay.Service(
 			'/bookmarksentry/get-group-entries',
 			{
@@ -36,8 +26,10 @@ factory('bookmarkFactory', function($q) {
 				start: -1,
 				end: -1
 			},
+			// Calling like this, with additional function param, calls it async
+			// http://www.liferay.com/de/community/forums/-/message_boards/view_message/12303402
+			// Using promise ($q) to make this work
 			function(obj) {
-//				console.log("BLAH: ", obj);
 				deferred.resolve(obj);
 			}
 		);
@@ -60,7 +52,6 @@ factory('bookmarkFactory', function($q) {
 				serviceContext: {}
 			},
 			function(obj) {
-				console.log("Saved: ", obj);
 				deferred.resolve(obj);
 			}
 		);
@@ -82,7 +73,6 @@ factory('bookmarkFactory', function($q) {
 				serviceContext: {}
 			},
 			function(obj) {
-				console.log("Created: ", obj);
 				deferred.resolve(obj);
 			}
 		);
@@ -99,7 +89,6 @@ factory('bookmarkFactory', function($q) {
 				entryId: bookmark.entryId
 			},
 			function(obj) {
-				console.log("Deleted: ", obj);
 				deferred.resolve(obj);
 			}
 		);

@@ -5,10 +5,7 @@ function bootstrap(id, portletId) {
 	// http://fdietz.github.io/recipes-with-angular-js/directives/passing-configuration-params-using-html-attributes.html
 	module.directive('i18n', function() {
 		return {
-			restrict: 'EA',
-//			scope: {
-//				key: '@key'
-//			},
+			restrict: 'A',
 			link: function(scope, element, attributes) {
 				var message = Liferay.Language.get(attributes["i18n"]);
 				element.html(message);
@@ -25,6 +22,8 @@ function bootstrap(id, portletId) {
 
 			$scope.page = urlFactory.create($scope.portletId, 'list');
 
+			// Getting Liferay stuff in Javascript
+			// http://www.marconapolitano.it/en/liferay/39-how-to-use-liferay-themedisplay-object-with-javascript.html
 			$scope.model = {
 				currentBookmark: {},
 				token: Liferay.authToken,
@@ -33,36 +32,27 @@ function bootstrap(id, portletId) {
 			}
 
 			bookmarkFactory.getBookmarks().then(function(bookmarks) {
-//				console.log("Setting ", bookmarks);
 				$scope.model.bookmarks = bookmarks;
 			});
 
 			releaseFactory.getRelease($scope.portletId).then(function(release) {
-//				console.log("Release ", release);
 				$scope.model.release = release;
 			});
 
 			$scope.main = function() {
 				$scope.model.currentBookmark = {};
 				$scope.page = urlFactory.create($scope.portletId, 'list');
-//				$timeout(function() {
-//					bookmarkFactory.getBookmarks().then(function(bookmarks) {
-//						$scope.model.bookmarks = bookmarks;
-//					});
-//				});
 				$scope.reload();
 			}
 
 			$scope.detail = function(bookmark) {
 				$scope.model.currentBookmark = bookmark;
 				$scope.page = urlFactory.create($scope.portletId, 'detail');
-				console.log("Go to detail for bookmark", bookmark.name);
 			}
 
 			$scope.add = function() {
 				$scope.model.currentBookmark = {};
 				$scope.page = urlFactory.create($scope.portletId, 'add');
-				console.log("Add new bookmark");
 			}
 
 			$scope.store = function() {
@@ -87,7 +77,6 @@ function bootstrap(id, portletId) {
 			}
 
 			$scope.reload = function() {
-				console.log("INIT");
 				$timeout(function() {
 					bookmarkFactory.getBookmarks().then(function(bookmarks) {
 						$scope.model.bookmarks = bookmarks;
@@ -96,15 +85,9 @@ function bootstrap(id, portletId) {
 			}
 
 			Liferay.on('reloadBookmarks', function(event) {
-				console.log('event', event, $scope.portletId);
+				// Filter out event if we triggered it in this portlet instance
 				if (event.portletId != $scope.portletId) {
-					console.log("RELOAD");
-					$timeout(function() {
-						bookmarkFactory.getBookmarks().then(function(bookmarks) {
-							$scope.model.bookmarks = bookmarks;
-//							$scope.$apply();
-						});
-					});
+					$scope.reload();
 				}
 			});
 		}]
