@@ -12,15 +12,24 @@
 			<name>view-template</name>
 			<value>/jsp/view.jsp</value>
 		</init-param>
+		<init-param>
+			<name>edit-template</name>
+			<value>/jsp/edit.jsp</value>
+		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
+			<portlet-mode>edit</portlet-mode>
 		</supports>
+		<supported-locale>en</supported-locale>
+		<supported-locale>en_US</supported-locale>
+		<supported-locale>nl</supported-locale>
+		<supported-locale>nl_BE</supported-locale>
 		<resource-bundle>Language</resource-bundle>
 		<portlet-info>
 			<title>Angular Demo Portlet</title>
-			<short-title>Angular Deno Portlet</short-title>
+			<short-title>Angular Demo Portlet</short-title>
 			<keywords>angular</keywords>
 		</portlet-info>
 		<security-role-ref>

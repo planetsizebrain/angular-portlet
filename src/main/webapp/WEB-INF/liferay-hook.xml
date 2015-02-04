@@ -9,4 +9,8 @@
 		https://issues.liferay.com/browse/LPS-16513
 	-->
 	<language-properties>Language.properties</language-properties>
+	<language-properties>Language_en_US.properties</language-properties>
+	<language-properties>Language_nl.properties</language-properties>
+	<language-properties>Language_nl_BE.properties</language-properties>
+	<custom-jsp-dir>/custom_jsps</custom-jsp-dir>
 </hook>

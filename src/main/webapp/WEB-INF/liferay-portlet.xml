@@ -12,6 +12,9 @@
 		   http://www.liferay.com/community/forums/-/message_boards/message/39262590
 		-->
 		<footer-portal-javascript>/angular-portlet/js/angular.js</footer-portal-javascript>
+		<footer-portal-javascript>/angular-portlet/js/angular-ui-router.js</footer-portal-javascript>
+		<footer-portal-javascript>/angular-portlet/js/angular-translate.js</footer-portal-javascript>
+		<footer-portal-javascript>/angular-portlet/js/angular-translate-loader-url.js</footer-portal-javascript>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/service.js</footer-portlet-javascript>
 	</portlet>
