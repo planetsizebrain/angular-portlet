@@ -2,11 +2,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>be.aca.liferay</groupId>
 	<artifactId>angular</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>Liferay Angular Portlet</name>
 	<description>Liferay Angular Portlet</description>
-	<url>http://www.aca-it.be</url>
+	<url>https://github.com/planetsizebrain/angular-portlet</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -72,6 +72,16 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>18.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.9.9-RC1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>3.2.0.RELEASE</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -1,4 +1,4 @@
-package be.aca.liferay.angular.portlet;
+package be.aca.liferay.angular.portlet.resource;
 
 import java.lang.annotation.*;
 
@@ -7,5 +7,5 @@ import java.lang.annotation.*;
 @Inherited
 public @interface Resource {
 
-	public String id() default "";
+	public String id();
 }
