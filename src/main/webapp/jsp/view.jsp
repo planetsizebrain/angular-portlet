@@ -4,9 +4,9 @@
 
 <portlet:defineObjects />
 
-<div id="<portlet:namespace />main" ng-controller="MainCtrl" ng-cloak>
-	<div ng-hide="model.loggedIn">You need to be logged in to use this portlet</div>
-	<div ui-view ng-show="model.loggedIn"></div>
+<div id="<portlet:namespace />main" ng-cloak>
+	<div ng-hide="liferay.loggedIn">You need to be logged in to use this portlet</div>
+	<div ui-view ng-show="liferay.loggedIn"></div>
 </div>
 
 <!--

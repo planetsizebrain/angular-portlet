@@ -1,3 +1,5 @@
+'use strict';
+
 function bootstrap(id, portletId) {
 
 	var module = angular.module(id, ["ui.router", "app.factories", "app.controllers", "pascalprecht.translate"]);
@@ -12,35 +14,35 @@ function bootstrap(id, portletId) {
 
 		$translateProvider.useUrlLoader(url.toString());
 		$translateProvider.preferredLanguage(Liferay.ThemeDisplay.getBCP47LanguageId());
+		// TODO: fails for some strange reason?
 		//$translateProvider.useLocalStorage();
 	}]);
 
+	// TODO: convert bottom bar to directive?
 	// http://fdietz.github.io/recipes-with-angular-js/directives/passing-configuration-params-using-html-attributes.html
-	module.directive('i18n', function() {
-		return {
-			restrict: 'A',
-			link: function(scope, element, attributes) {
-				var message = Liferay.Language.get(attributes["i18n"]);
-				element.html(message);
-			}
-		}
-	});
+	//module.directive('i18n', function() {
+	//	return {
+	//		restrict: 'A',
+	//		link: function(scope, element, attributes) {
+	//			var message = Liferay.Language.get(attributes["i18n"]);
+	//			element.html(message);
+	//		}
+	//	}
+	//});
 
-	module.factory('GetName', ['$http', '$timeout',
-		function($http, $timeout) {
-			return {
-				get : function(porletId, page) {
-					var resourceURL = Liferay.PortletURL.createRenderURL();
-					resourceURL.setPortletId(portletId.substr(1, portletId.length - 2));
-					resourceURL.setPortletMode('view');
-					resourceURL.setWindowState('exclusive');
-					resourceURL.setParameter('jspPage', '/partials/' + page + '.html');
+	module.run(['$rootScope', 'releaseFactory', function ($rootScope, releaseFactory) {
+		$rootScope.portletId = portletId.substr(1, portletId.length - 2);
 
-					return resourceURL.toString();
-				}
-			};
+		$rootScope.liferay = {
+			token: Liferay.authToken,
+			companyId: Liferay.ThemeDisplay.getCompanyId(),
+			loggedIn: Liferay.ThemeDisplay.isSignedIn()
 		}
-	]);
+
+		releaseFactory.getRelease($rootScope.portletId).then(function(release) {
+			$rootScope.liferay.release = release;
+		});
+	}]);
 
 	module.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', 'urlProvider',
 			function($urlRouterProvider, $stateProvider, $locationProvider, urlProvider) {
@@ -51,19 +53,14 @@ function bootstrap(id, portletId) {
 		$locationProvider.html5Mode(true);
 		$urlRouterProvider.otherwise('/');
 
+		// TODO: change templateprovider url on routechangestart
 		$stateProvider
 			.state("list", {
 				url: '/',
-				templateUrl: function ($stateParams) {
-					var resourceURL = Liferay.PortletURL.createRenderURL();
-					resourceURL.setPortletId(portletId.substr(1, portletId.length - 2));
-					resourceURL.setPortletMode('view');
-					resourceURL.setWindowState('exclusive');
-					resourceURL.setParameter('jspPage', '/partials/list.html');
-
-					return resourceURL.toString();
-				}
-				//controller: 'FirstCtrl'
+				templateProvider: function ($templateFactory, url) {
+					return $templateFactory.fromUrl(url.create('list'));
+				},
+				controller: 'ListCtrl'
 			})
 			.state("detail", {
 				templateProvider: function ($templateFactory, url) {
@@ -72,19 +69,13 @@ function bootstrap(id, portletId) {
 				params: {
 					bookmark: {}
 				},
-				controller: 'EditCtrl'
+				controller: 'DetailCtrl'
 			})
 			.state("add", {
-				templateUrl: function ($stateParams) {
-					var resourceURL = Liferay.PortletURL.createRenderURL();
-					resourceURL.setPortletId(portletId.substr(1, portletId.length - 2));
-					resourceURL.setPortletMode('view');
-					resourceURL.setWindowState('exclusive');
-					resourceURL.setParameter('jspPage', '/partials/add.html');
-
-					return resourceURL.toString();
-				}
-				//controller: 'SecondCtrl'
+				templateProvider: function ($templateFactory, url) {
+					return $templateFactory.fromUrl(url.create('add'));
+				},
+				controller: 'AddCtrl'
 			});
 	}]);
 
@@ -92,91 +83,82 @@ function bootstrap(id, portletId) {
 
 	// Define scope in this way to avoid 'Unknown provider' problem
 	//      https://groups.google.com/forum/#!msg/angular/_EMeX_Dci2U/xQuDwWadCrsJ
-	.controller("MainCtrl", ['$scope', '$rootScope', '$http', '$timeout', 'urlFactory', 'bookmarkFactory', 'releaseFactory', '$stateParams',
-		function($scope, $rootScope, $http, $timeout, urlFactory, bookmarkFactory, releaseFactory, $stateParams) {
-			$scope.id = id;
-			$scope.portletId = portletId.substr(1, portletId.length - 2);
+	.controller("ListCtrl", ['$scope', '$rootScope', '$http', '$timeout', 'urlFactory', 'bookmarkFactory', '$stateParams',
+		function($scope, $rootScope, $http, $timeout, urlFactory, bookmarkFactory, $stateParams) {
+			//$scope.id = id;
+			//$scope.portletId = portletId.substr(1, portletId.length - 2);
 
-			$scope.page = urlFactory.create($scope.portletId, 'list');
+			//$scope.page = urlFactory.create($scope.portletId, 'list');
 
 			// Getting Liferay stuff in Javascript
 			// http://www.marconapolitano.it/en/liferay/39-how-to-use-liferay-themedisplay-object-with-javascript.html
 			$scope.model = {
-				currentBookmark: $stateParams.bookmark,
-				token: Liferay.authToken,
-				companyId: Liferay.ThemeDisplay.getCompanyId(),
-				loggedIn: Liferay.ThemeDisplay.isSignedIn()
+				//currentBookmark: $stateParams.bookmark
 			}
 
-			bookmarkFactory.getBookmarks().then(function(bookmarks) {
-				$scope.model.bookmarks = bookmarks;
-			});
-
-			releaseFactory.getRelease($scope.portletId).then(function(release) {
-				$scope.model.release = release;
-			});
-
-			$scope.main = function() {
-				$scope.model.currentBookmark = {};
-				$scope.page = urlFactory.create($scope.portletId, 'list');
-				$scope.reload();
-			}
-
-			$scope.detail = function(bookmark) {
-				$scope.model.currentBookmark = bookmark;
-				$scope.page = urlFactory.create($scope.portletId, 'detail');
-			}
-
-			$scope.add = function() {
-				$scope.model.currentBookmark = {};
-				$scope.page = urlFactory.create($scope.portletId, 'add');
-			}
-
-			$scope.store = function() {
-				bookmarkFactory.addBookmark($scope.model.currentBookmark).then(function(result) {
-					Liferay.fire('reloadBookmarks', { portletId: $scope.portletId });
-					$scope.main();
-				});
-			}
-
-			$scope.save = function() {
-				bookmarkFactory.saveBookmark($scope.model.currentBookmark).then(function(result) {
-					Liferay.fire('reloadBookmarks', { portletId: $scope.portletId });
-					$scope.main();
-				});
-			}
+			//bookmarkFactory.getBookmarks().then(function(bookmarks) {
+			//	$scope.model.bookmarks = bookmarks;
+			//});
 
 			$scope.delete = function(bookmark) {
 				bookmarkFactory.deleteBookmark(bookmark).then(function(result) {
 					Liferay.fire('reloadBookmarks', { portletId: $scope.portletId });
-					$scope.main();
+					$scope.load();
+					//$scope.main();
 				});
-			}
+			};
 
-			$scope.reload = function() {
+			$scope.load = function() {
 				$timeout(function() {
 					bookmarkFactory.getBookmarks().then(function(bookmarks) {
 						$scope.model.bookmarks = bookmarks;
 					});
 				});
-			}
+			};
 
 			Liferay.on('reloadBookmarks', function(event) {
 				// Filter out event if we triggered it in this portlet instance
 				if (event.portletId != $scope.portletId) {
-					$scope.reload();
+					$scope.load();
 				}
 			});
-		}]
-	).controller('EditCtrl', ['$scope', '$rootScope', '$http', '$timeout', 'urlFactory', '$stateParams',
-			function ($scope, $rootScope, $http, $timeout, urlFactory, $stateParams) {
 
-		console.log("Params " + $stateParams.bookmark.entryId);
+			$scope.load();
+		}]
+	).controller('DetailCtrl', ['$scope', '$rootScope', 'bookmarkFactory', '$state', '$stateParams',
+			function ($scope, $rootScope, bookmarkFactory, $state, $stateParams) {
+
+		console.log("Show detail for bookmark: " + $stateParams.bookmark.entryId);
+
+		// Getting Liferay stuff in Javascript
+		// http://www.marconapolitano.it/en/liferay/39-how-to-use-liferay-themedisplay-object-with-javascript.html
+		$scope.model = {
+			currentBookmark: $stateParams.bookmark
+		};
+
+		$scope.save = function() {
+			bookmarkFactory.saveBookmark($scope.model.currentBookmark).then(function(result) {
+				Liferay.fire('reloadBookmarks', { portletId: $scope.portletId });
+				$state.go('list');
+			});
+		}
+	}]).controller('AddCtrl', ['$scope', '$rootScope', 'bookmarkFactory', '$state', '$stateParams',
+			function ($scope, $rootScope, bookmarkFactory, $state, $stateParams) {
+
+		console.log("Add new bookmark...");
 
 		$scope.model = {
-			currentBookmark: $stateParams.bookmark,
-			loggedIn: Liferay.ThemeDisplay.isSignedIn()
-		}
+			currentBookmark: {}
+		};
+
+		$scope.store = function() {
+			bookmarkFactory.addBookmark($scope.model.currentBookmark).then(function(result) {
+				console.log("Added new bookmark: " + $scope.model.currentBookmark.name);
+
+				Liferay.fire('reloadBookmarks', { portletId: $scope.portletId });
+				$state.go('list');
+			});
+		};
 	}]);
 
 	// Don't use 'ng-app', but bootstrap Angular ourselves, so we can control
