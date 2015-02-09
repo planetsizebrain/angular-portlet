@@ -12,6 +12,8 @@ import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Release;
 import com.liferay.portal.service.ReleaseLocalServiceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -24,6 +26,8 @@ import java.util.Map;
 public class AngularPortlet extends ResourcePortlet {
 
 	private static final Locale DEFAULT_LIFERAY_LOCALE = new Locale(StringPool.BLANK);
+
+	private final static Logger logger = LoggerFactory.getLogger(AngularPortlet.class);
 
 	@ProcessAction(name = "clearCache")
 	public void clearCache(ActionRequest actionRequest, ActionResponse actionResponse) {
@@ -40,6 +44,7 @@ public class AngularPortlet extends ResourcePortlet {
 	@Resource(id = "language")
 	@CacheResource(keyParam = "locale")
 	public Map<String, String> getLanguage(ResourceRequest resourceRequest, @ResourceParam String locale) throws Exception {
+		logger.debug("Get language bundle for locale {}", locale);
 //		String param = resourceRequest.getParameter("locale");
 
 		Locale localeValue = DEFAULT_LIFERAY_LOCALE;
