@@ -19,6 +19,14 @@ provider('url', function() {
 				resourceURL.setParameter('jspPage', '/partials/' + page + '.html');
 
 				return resourceURL.toString();
+			},
+			createResource: function(resourceId, paramName, paramValue) {
+				var resourceURL = Liferay.PortletURL.createResourceURL();
+				resourceURL.setPortletId(pid.substr(1, pid.length - 2));
+				resourceURL.setResourceId(resourceId);
+				resourceURL.setParameter(paramName, paramValue);
+
+				return resourceURL.toString();
 			}
 		}
 	};
