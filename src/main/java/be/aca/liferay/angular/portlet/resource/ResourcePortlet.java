@@ -19,7 +19,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class ResourcePortlet extends MVCPortlet {
@@ -43,7 +42,7 @@ public class ResourcePortlet extends MVCPortlet {
 					if (id.equals(resourceId) && method.getReturnType() != Void.TYPE) {
 						try {
 							String json;
-							ResourceCacheKey key = new ResourceCacheKey(resourceRequest, method, id);
+							ResourceCacheKey key = new ResourceCacheKey(resourceRequest, resourceResponse, method, id);
 
 							CacheResource cacheResource = method.getAnnotation(CacheResource.class);
 							if (cacheResource != null) {
@@ -81,12 +80,14 @@ public class ResourcePortlet extends MVCPortlet {
 	private class ResourceCacheKey {
 
 		private ResourceRequest request;
+		private ResourceResponse response;
 		private Method method;
 		private String resourceId;
 		private String paramValue;
 
-		public ResourceCacheKey(ResourceRequest request, Method method, String resourceId) {
+		public ResourceCacheKey(ResourceRequest request, ResourceResponse response, Method method, String resourceId) {
 			this.request = request;
+			this.response = response;
 			this.method = method;
 			this.resourceId = resourceId;
 		}
@@ -96,12 +97,14 @@ public class ResourcePortlet extends MVCPortlet {
 			// http://www.beyondjava.net/blog/reading-java-8-method-parameter-named-reflection/
 			ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
 			String[] names = parameterNameDiscoverer.getParameterNames(method);
+			Class[] types = method.getParameterTypes();
 
 			// http://stackoverflow.com/questions/15139424/not-able-to-invoke-main-method-using-reflection-illegalargumentexception-argu
-			List<Object> values = Lists.newArrayList((Object) request);
+			List<Object> values = Lists.<Object>newArrayList();
 			for (int i = 0; i < paramAnnotations.length; i++) {
 				// http://tutorials.jenkov.com/java-reflection/annotations.html#parameter
 				String name = names[i];
+				Class type = types[i];
 
 				System.out.println("PARAM NAME: " + name);
 
@@ -111,11 +114,19 @@ public class ResourcePortlet extends MVCPortlet {
 					for (Annotation annotation : annotations) {
 						System.out.println("ANNO TYPE: " + annotation.annotationType());
 						// http://stackoverflow.com/questions/3348363/checking-if-an-annotation-is-of-a-specific-type
-						if (annotation instanceof ResourceParam) {
+						if (annotation instanceof Param) {
 							System.out.println("FOUND PARAM");
 
 							String value = request.getParameter(name);
 							values.add(value);
+						}
+						if (annotation instanceof Context) {
+							System.out.println("FOUND CONTEXT");
+							if (type.isAssignableFrom(ResourceRequest.class)) {
+								values.add(request);
+							} else {
+								values.add(response);
+							}
 						}
 					}
 				}

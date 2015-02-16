@@ -7,6 +7,8 @@
 		<icon>/img/icon.png</icon>
 		<instanceable>true</instanceable>
 		<ajaxable>false</ajaxable>
+		<header-portal-css>/angular-portlet/css/font-awesome.css</header-portal-css>
+		<header-portal-css>/angular-portlet/css/style.css</header-portal-css>
 		<!--
 		   We don't need to load Liferay's service.js anymore since 6.2
 		   http://www.liferay.com/community/forums/-/message_boards/message/39262590
@@ -18,6 +20,7 @@
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/controllers.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/services.js</footer-portlet-javascript>
+		<css-class-wrapper>angular-portlet</css-class-wrapper>
 	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>

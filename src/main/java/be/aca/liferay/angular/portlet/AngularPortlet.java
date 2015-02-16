@@ -1,9 +1,6 @@
 package be.aca.liferay.angular.portlet;
 
-import be.aca.liferay.angular.portlet.resource.CacheResource;
-import be.aca.liferay.angular.portlet.resource.Resource;
-import be.aca.liferay.angular.portlet.resource.ResourceParam;
-import be.aca.liferay.angular.portlet.resource.ResourcePortlet;
+import be.aca.liferay.angular.portlet.resource.*;
 import com.google.common.base.Strings;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -15,10 +12,7 @@ import com.liferay.portal.service.ReleaseLocalServiceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.ProcessAction;
-import javax.portlet.ResourceRequest;
+import javax.portlet.*;
 import java.lang.reflect.Field;
 import java.util.Locale;
 import java.util.Map;
@@ -36,16 +30,17 @@ public class AngularPortlet extends ResourcePortlet {
 	}
 
 	@Resource(id = "release")
-	public Release getRelease(ResourceRequest resourceRequest, @ResourceParam String releaseId) throws SystemException, PortalException {
+	public Release getRelease(@Param String releaseId) throws SystemException, PortalException {
 		long releaseIdValue = Long.parseLong(releaseId);
 		return ReleaseLocalServiceUtil.getRelease(releaseIdValue);
 	}
 
 	@Resource(id = "language")
 	@CacheResource(keyParam = "locale")
-	public Map<String, String> getLanguage(ResourceRequest resourceRequest, @ResourceParam String locale) throws Exception {
+	public Map<String, String> getLanguage(@Param String locale, @Context ResourceResponse response) throws Exception {
 		logger.debug("Get language bundle for locale {}", locale);
-//		String param = resourceRequest.getParameter("locale");
+
+		logger.debug("Response committed {}", response.isCommitted());
 
 		Locale localeValue = DEFAULT_LIFERAY_LOCALE;
 		if (!Strings.isNullOrEmpty(locale)) {

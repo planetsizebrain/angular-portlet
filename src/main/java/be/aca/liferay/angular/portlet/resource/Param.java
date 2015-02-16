@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface ResourceParam {
+public @interface Param {
 
-//	public String id();
+	public String id() default "";
 }

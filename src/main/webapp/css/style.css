@@ -1,0 +1,5 @@
+.angular-portlet .fa {
+	color: gray;
+	/* Fix cursor issue: no hand shown */
+	cursor: pointer;
+}
