@@ -17,7 +17,7 @@ module.controller("ListCtrl", ['$scope', '$rootScope', '$http', '$timeout', 'url
 		//	$scope.model.bookmarks = bookmarks;
 		//});
 
-		$scope.delete = function(bookmark) {
+		$scope.remove = function(bookmark) {
 			bookmarkFactory.deleteBookmark(bookmark).then(function(result) {
 				Liferay.fire('reloadBookmarks', { portletId: $scope.portletId });
 				$scope.load();
