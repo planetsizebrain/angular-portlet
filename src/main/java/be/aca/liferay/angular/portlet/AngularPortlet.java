@@ -1,6 +1,9 @@
 package be.aca.liferay.angular.portlet;
 
 import be.aca.liferay.angular.portlet.resource.*;
+import be.aca.liferay.angular.portlet.resource.annotation.CacheResource;
+import be.aca.liferay.angular.portlet.resource.annotation.Param;
+import be.aca.liferay.angular.portlet.resource.annotation.Resource;
 import com.google.common.base.Strings;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -37,16 +40,16 @@ public class AngularPortlet extends ResourcePortlet {
 
 	@Resource(id = "language")
 	@CacheResource(keyParam = "locale")
-	public Map<String, String> getLanguage(@Param String locale, @Context ResourceResponse response) throws Exception {
+	public Map<String, String> getLanguage(@Param String locale) throws Exception {
 		logger.debug("Get language bundle for locale {}", locale);
-
-		logger.debug("Response committed {}", response.isCommitted());
 
 		Locale localeValue = DEFAULT_LIFERAY_LOCALE;
 		if (!Strings.isNullOrEmpty(locale)) {
 			localeValue = Locale.forLanguageTag(locale);
 		}
 
+		// Some ugly code, using the Liferay portal classloader to get at the language map
+		// that contains a cached resource bundle for the active locales
 		ClassLoader portalClassLoader = PortalClassLoaderUtil.getClassLoader();
 
 		Class c = portalClassLoader.loadClass("com.liferay.portal.language.LanguageResources");

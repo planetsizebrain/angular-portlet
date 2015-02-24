@@ -1,4 +1,4 @@
-package be.aca.liferay.angular.portlet.resource;
+package be.aca.liferay.angular.portlet.resource.annotation;
 
 import java.lang.annotation.*;
 

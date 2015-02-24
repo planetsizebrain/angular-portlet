@@ -32,31 +32,5 @@
 			<short-title>Angular Demo Portlet</short-title>
 			<keywords>angular</keywords>
 		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
 	</portlet>
-
-	<filter>
-		<filter-name>ResourceCachingFilter</filter-name>
-		<filter-class>be.aca.liferay.angular.portlet.filter.ResourceCachingFilter</filter-class>
-		<lifecycle>RESOURCE_PHASE</lifecycle>
-		<init-param>
-			<name>resourceIds</name>
-			<value>locale</value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>ResourceCachingFilter</filter-name>
-		<portlet-name>angular</portlet-name>
-	</filter-mapping>
 </portlet-app>

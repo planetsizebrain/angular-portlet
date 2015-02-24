@@ -2,9 +2,9 @@
 
 function bootstrap(id, portletId) {
 
-	var module = angular.module(id, ["ui.router", "app.factories", "app.controllers", "pascalprecht.translate"]);
+	var app = angular.module(id, ["ui.router", "app.factories", "app.controllers", "pascalprecht.translate", "jcs-autoValidate"]);
 
-	module.directive('liferay', ['$rootScope', 'urlFactory', function($rootScope, urlFactory) {
+	app.directive('liferay', ['$rootScope', 'urlFactory', function($rootScope, urlFactory) {
 		var directive = {};
 
 		directive.restrict = 'E';
@@ -13,7 +13,7 @@ function bootstrap(id, portletId) {
 		return directive;
 	}]);
 
-	module.run(['$rootScope', 'releaseFactory', 'urlFactory', function ($rootScope, releaseFactory, urlFactory) {
+	app.run(['$rootScope', 'releaseFactory', 'urlFactory', function ($rootScope, releaseFactory, urlFactory) {
 		// Calculate the actual portlet ID and put that in the root scope for all to use.
 		$rootScope.portletId = portletId.substr(1, portletId.length - 2);
 
@@ -39,7 +39,71 @@ function bootstrap(id, portletId) {
 		});
 	}]);
 
-	module.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', '$translateProvider', 'urlProvider',
+	app.factory('myCustomErrorMessageResolver', ['$q', '$http', '$translate', '$rootScope', 'urlFactory',
+			function ($q, $http, $translate, $rootScope, urlFactory) {
+
+				var resolve = function (errorType, el) {
+					var defer = $q.defer();
+					// do something to get the error message
+					// then resolve the promise defer.resolve('some error message');
+					//var url = urlFactory.createResource($rootScope.portletId, 'language', 'locale', Liferay.ThemeDisplay.getBCP47LanguageId());
+					//$http.get(url).success(function (response) {
+					//	defer.resolve(response[errorType]);
+					//});
+					$translate(errorType).then(function (message) {
+						if (el && el.attr) {
+							try {
+								var parameters = [];
+								var parameter = el.attr('ng-' + errorType);
+								if (parameter === undefined) {
+									parameter = el.attr('data-ng-' + errorType) || el.attr(errorType);
+								}
+
+								parameters.push(parameter || '');
+
+								message = message.format(parameters);
+							} catch (e) {}
+						}
+
+						defer.resolve(message);
+					});
+
+					return defer.promise;
+				};
+
+				return {
+					resolve: resolve
+				};
+			}
+		]);
+
+	// now set the custom error resolver as the module's default one.
+	app.run([
+			'validator',
+			'myCustomErrorMessageResolver',
+			function (validator, myCustomErrorMessageResolver) {
+				validator.setErrorMessageResolver(myCustomErrorMessageResolver.resolve);
+			}
+		]);
+
+	//app.run(['$q', 'defaultErrorMessageResolver', '$http', '$rootScope', 'urlFactory',
+	//		function ($q, defaultErrorMessageResolver, $http, $rootScope, urlFactory) {
+	//
+	//	defaultErrorMessageResolver.setCulture(Liferay.ThemeDisplay.getBCP47LanguageId(), function () {
+	//		var defer = $q.defer();
+	//
+	//		// you can get the error messages however you want and resolve the promise when they are loaded
+	//		// defer.resolve(errorMessagesRetreivedBySomeMethod);
+	//		var url = urlFactory.createResource($rootScope.portletId, 'language', 'locale', Liferay.ThemeDisplay.getBCP47LanguageId());
+	//		$http.get(url).success(function(response) {
+	//			defer.resolve(response);
+	//		});
+	//
+	//		return defer.promise;
+	//	});
+	//}]);
+
+	app.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', '$translateProvider', 'urlProvider',
 			function($urlRouterProvider, $stateProvider, $locationProvider, $translateProvider, urlProvider) {
 
 		urlProvider.setPid(portletId);

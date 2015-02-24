@@ -3,3 +3,10 @@
 	/* Fix cursor issue: no hand shown */
 	cursor: pointer;
 }
+
+input.ng-invalid {
+	border: 1px solid red !important;
+}
+input.ng-valid {
+	border: 1px solid green !important;
+}

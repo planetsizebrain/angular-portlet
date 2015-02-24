@@ -1,17 +1,17 @@
 <h2 translate>add.new.bookmark</h2>
-<form role="form">
+<form role="form" name="bookmarkForm" ng-submit="store(bookmarkForm.$valid)" novalidate="novalidate">
 	<div class="form-group">
 		<label for="name" translate>label.name</label>
-		<input type="text" ng-model="model.currentBookmark.name" class="form-control" id="name">
+		<input type="text" ng-model="model.currentBookmark.name" class="form-control" id="name" name="name" ng-minlength="3" required>
 	</div>
 	<div class="form-group">
 		<label for="description" translate>label.description</label>
-		<input type="text" ng-model="model.currentBookmark.description" class="form-control" id="description">
+		<input type="text" ng-model="model.currentBookmark.description" class="form-control" id="description" name="description" ng-minlength="3" required>
 	</div>
 	<div class="form-group">
 		<label for="url" translate>label.url</label>
-		<input type="url" ng-model="model.currentBookmark.url" class="form-control" id="url">
+		<input type="url" ng-model="model.currentBookmark.url" class="form-control" id="url" name="url" required>
 	</div>
-	<button type="submit" class="btn btn-default" ng-click="store();" translate>action.submit</button>
+	<button type="submit" class="btn btn-default" ng-disabled="bookmarkForm.$invalid" translate>action.submit</button>
 	<button type="submit" class="btn btn-default" ui-sref='list' translate>action.cancel</button>
 </form>

@@ -9,10 +9,10 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="bookmark in model.bookmarks track by $index">
+			<tr ng-repeat="bookmark in model.bookmarks">
 				<td>{{bookmark.entryId}}</td>
 				<td>{{bookmark.name}}</td>
-				<td><a ui-sref='detail({bookmark: bookmark})'><i class="fa fa-info-circle"></i></a> | <a ng-click="remove(bookmark);"><i class="fa fa-trash-o"></i></a></td>
+				<td><a href="{{bookmark.url}}" target="_blank"><i class="fa fa-external-link-square"></i></a> | <a ui-sref='detail({bookmark: bookmark})'><i class="fa fa-info-circle"></i></a> | <a ng-click="remove(bookmark);"><i class="fa fa-trash-o"></i></a></td>
 			</tr>
 		</tbody>
 	</ul>

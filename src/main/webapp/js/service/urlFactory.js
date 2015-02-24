@@ -45,6 +45,14 @@ factory('urlFactory', function() {
 			resourceURL.setParameter('jspPage', '/partials/' + name + '.html');
 
 			return resourceURL.toString();
+		},
+		createResource: function(pid, resourceId, paramName, paramValue) {
+			var resourceURL = Liferay.PortletURL.createResourceURL();
+			resourceURL.setPortletId(pid);
+			resourceURL.setResourceId(resourceId);
+			resourceURL.setParameter(paramName, paramValue);
+
+			return resourceURL.toString();
 		}
 	};
 })

@@ -4,7 +4,7 @@ appender("STDOUT", ConsoleAppender) {
     }
 }
 
-logger("be.aca.liferay.angular.portlet.AngularPortlet", DEBUG)
+logger("be.aca.liferay.angular.portlet", DEBUG)
 
 root(INFO, ["STDOUT"])
 
