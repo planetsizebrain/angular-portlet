@@ -12,7 +12,7 @@ angular.module('app.controllers').
 				bookmarkFactory.addBookmark($scope.model.currentBookmark).then(function(result) {
 					console.log("Added new bookmark: " + $scope.model.currentBookmark.name);
 
-					Liferay.fire('reloadBookmarks', {portletId: $scope.portletId});
+					Liferay.fire('reloadBookmarks', { portletId: $scope.portletId });
 					$state.go('list');
 				});
 			};
