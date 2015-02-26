@@ -4,8 +4,8 @@ function bootstrap(id, portletId) {
 
 	var app = angular.module(id, ["ui.router", "app.factories", "app.controllers", "app.directives", "pascalprecht.translate", "jcs-autoValidate"]);
 
-	app.run(['$rootScope', 'releaseFactory', 'urlFactory', 'validator', 'i18nErrorMessageResolver',
-		function($rootScope, releaseFactory, urlFactory, validator, i18nErrorMessageResolver) {
+	app.run(['$rootScope', 'releaseFactory', 'url', 'validator', 'i18nErrorMessageResolver',
+		function($rootScope, releaseFactory, url, validator, i18nErrorMessageResolver) {
 
 			// Calculate the actual portlet ID and put that in the root scope for all to use.
 			$rootScope.portletId = portletId.substr(1, portletId.length - 2);
@@ -17,7 +17,7 @@ function bootstrap(id, portletId) {
 				loggedIn: Liferay.ThemeDisplay.isSignedIn()
 			};
 
-			releaseFactory.getRelease($rootScope.portletId).then(function(release) {
+			releaseFactory.getRelease().then(function(release) {
 				$rootScope.liferay.release = release;
 			});
 
@@ -27,7 +27,7 @@ function bootstrap(id, portletId) {
 			// to see if the URL is already fixed or not.
 			$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 				if (!toState.hasOwnProperty('fixedUrl')) {
-					toState.templateUrl = urlFactory.create($rootScope.portletId, toState.templateUrl);
+					toState.templateUrl = url.createRenderUrl(toState.templateUrl);
 					toState.fixedUrl = true;
 				}
 			});
@@ -41,7 +41,7 @@ function bootstrap(id, portletId) {
 
 			urlProvider.setPid(portletId);
 
-			$translateProvider.useUrlLoader(urlProvider.$get().createResource('language', 'locale', Liferay.ThemeDisplay.getBCP47LanguageId()));
+			$translateProvider.useUrlLoader(urlProvider.$get().createResourceUrl('language', 'locale', Liferay.ThemeDisplay.getBCP47LanguageId()));
 			$translateProvider.preferredLanguage(Liferay.ThemeDisplay.getBCP47LanguageId());
 
 			// No # when routing!

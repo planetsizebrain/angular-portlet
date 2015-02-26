@@ -1,11 +1,11 @@
 // A custom directive that used a partial HTML template to output some Liferay data
 angular.module('app.directives').
-	directive('liferay', ['$rootScope', 'urlFactory',
-		function($rootScope, urlFactory) {
+	directive('liferay', ['url',
+		function(url) {
 			var directive = {};
 
 			directive.restrict = 'E';
-			directive.templateUrl = urlFactory.create($rootScope.portletId, 'liferay');
+			directive.templateUrl = url.createRenderUrl('liferay');
 
 			return directive;
 		}
