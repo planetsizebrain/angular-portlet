@@ -21,6 +21,7 @@
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/controllers.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/services.js</footer-portlet-javascript>
+		<footer-portlet-javascript>/js/directives.js</footer-portlet-javascript>
 		<css-class-wrapper>angular-portlet</css-class-wrapper>
 	</portlet>
 </liferay-portlet-app>

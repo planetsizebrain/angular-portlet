@@ -37,7 +37,7 @@
 						Exclude originals of file that will be merged with wro4j
 						http://stackoverflow.com/questions/3750189/maven2-excluding-directory-from-war
 					-->
-					<warSourceExcludes>js/controller/*.js,js/service/*.js</warSourceExcludes>
+					<warSourceExcludes>js/controller/*.js,js/service/*.js,js/directive/*.js</warSourceExcludes>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -58,7 +58,7 @@
 				</executions>
 				<configuration>
 					<!-- No space allowed after a comma -->
-					<targetGroups>controllers,services</targetGroups>
+					<targetGroups>controllers,services,directives</targetGroups>
 					<jsDestinationFolder>${project.build.directory}/${project.build.finalName}/js</jsDestinationFolder>
 					<contextFolder>${basedir}/src/main/webapp/</contextFolder>
 				</configuration>

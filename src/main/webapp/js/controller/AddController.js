@@ -1,28 +1,21 @@
-'use strict';
+angular.module('app.controllers').
+	controller('AddCtrl', ['$scope', '$rootScope', 'bookmarkFactory', '$state', '$stateParams',
+		function($scope, $rootScope, bookmarkFactory, $state, $stateParams) {
 
-var module = angular.module('app.controllers', []);
+			console.log("Add new bookmark...");
 
-module.controller('AddCtrl', ['$scope', '$rootScope', 'bookmarkFactory', '$state', '$stateParams',
-	function ($scope, $rootScope, bookmarkFactory, $state, $stateParams) {
+			$scope.model = {
+				currentBookmark: {}
+			};
 
-		console.log("Add new bookmark...");
-
-		$scope.model = {
-			currentBookmark: {}
-		};
-
-		$scope.store = function(isValid) {
-			$scope.$broadcast('show-errors-check-validity');
-
-			if (isValid) {
-				bookmarkFactory.addBookmark($scope.model.currentBookmark).then(function (result) {
+			$scope.store = function() {
+				bookmarkFactory.addBookmark($scope.model.currentBookmark).then(function(result) {
 					console.log("Added new bookmark: " + $scope.model.currentBookmark.name);
 
 					Liferay.fire('reloadBookmarks', {portletId: $scope.portletId});
 					$state.go('list');
 				});
-			} else {
-				alert('our form is invalid');
-			}
-		};
-}]);
+			};
+		}
+	]
+);
