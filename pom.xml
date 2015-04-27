@@ -75,23 +75,11 @@
 								<copy file="src/main/resources/Language.properties" tofile="${project.build.outputDirectory}/Language_en_US.properties" />
 								<copy file="src/main/resources/Language_nl.properties" tofile="${project.build.outputDirectory}/Language_nl_BE.properties" />
 								<copy file="src/main/resources/Language_nl.properties" tofile="${project.build.outputDirectory}/Language_nl_NL.properties" />
+								<copy file="src/main/resources/Language_el.properties" tofile="${project.build.outputDirectory}/Language_el_GR.properties" />
 							</tasks>
 						</configuration>
 						<goals>
 							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>native2ascii-maven-plugin</artifactId>
-				<version>1.0-beta-1</version>
-				<executions>
-					<execution>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>native2ascii</goal>
 						</goals>
 					</execution>
 				</executions>

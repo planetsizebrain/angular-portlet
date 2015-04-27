@@ -12,5 +12,7 @@
 	<language-properties>Language_en_US.properties</language-properties>
 	<language-properties>Language_nl.properties</language-properties>
 	<language-properties>Language_nl_BE.properties</language-properties>
+	<language-properties>Language_el.properties</language-properties>
+	<language-properties>Language_el_GR.properties</language-properties>
 	<custom-jsp-dir>/custom_jsps</custom-jsp-dir>
 </hook>

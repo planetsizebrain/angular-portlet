@@ -46,11 +46,14 @@ function bootstrap(id, portletId) {
 
 			// No # when routing!
 			$locationProvider.html5Mode(true);
-			$urlRouterProvider.otherwise('/');
+
+			var currentPageUrl = Liferay.ThemeDisplay.getLayoutURL();
+			currentPageUrl = currentPageUrl.substr(currentPageUrl.indexOf('/', 10));
+			$urlRouterProvider.otherwise(currentPageUrl);
 
 			$stateProvider
 				.state("list", {
-					url: '/',
+					url: currentPageUrl,
 					templateUrl: 'list',
 					controller: 'ListCtrl'
 				})
